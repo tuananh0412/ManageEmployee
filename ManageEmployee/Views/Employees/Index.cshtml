@@ -12,6 +12,14 @@
     <a asp-action="CreateFresher">Thêm nhân viên mới ra trường</a> |
     <a asp-action="CreateIntern">Thêm thực tập sinh</a>
 </p>
+
+<form asp-controller="Employees" asp-action="Index">
+    <p>
+        Tên nhân viên: <input type="text" name="SearchString" />
+        <input type="submit" value="Tìm kiếm" />
+    </p>
+</form>
+
 <table class="table">
     <thead>
         <tr>

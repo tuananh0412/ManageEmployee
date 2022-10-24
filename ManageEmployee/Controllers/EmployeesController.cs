@@ -383,11 +383,6 @@ namespace ManageEmployee.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Employees == null)
-            {
-                return Problem("Entity set 'QuanLyNhanVienContext.Employees'  is null.");
-            }
-
             var employee = await _context.Employees.FindAsync(id);
             var experience = await _context.Experiences.FindAsync(id);
             var fresher = await _context.Freshers.FindAsync(id);
