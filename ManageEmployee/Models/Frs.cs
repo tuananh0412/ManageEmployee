@@ -1,10 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
+using ManageEmployee.Models.DTO;
 
 namespace ManageEmployee.Models
 {
-    public class Frs : Employee
+    public class Frs : Empl
     {
+        public Frs()
+        { }
+
+        public Frs(string fullName, DateTime? dateOfBirth, string? gender, string? address, string? phoneNumber, string? email,
+            DateTime? graduationDate, string? graduationRank, string? education) : base(fullName, dateOfBirth, gender, address, phoneNumber, email)
+        {
+            GraduationDate = graduationDate;
+            GraduationRank = graduationRank;
+            Education = education;
+        }
+
         [Display(Name = "Ngày tốt nghiệp")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
@@ -15,11 +27,5 @@ namespace ManageEmployee.Models
 
         [Display(Name = "Trường tốt nghiệp")]
         public string? Education { get; set; }
-
-        [Display(Name = "Tên bằng")]
-        public string? CertificateName { get; set; }
-
-        [Display(Name = "Xếp loại bằng")]
-        public string? CertificateRank { get; set; }
     }
 }

@@ -1,19 +1,18 @@
-﻿@model ManageEmployee.Models.Certificate
+﻿@model ManageEmployee.Models.DTO.Certificate
 
 @{
-    ViewData["Title"] = "EditCertificate";
+    ViewData["Title"] = "CreateCertificate";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Sửa</h1>
+<h1>Thêm mới</h1>
 
 <h4>Bằng cấp</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditCertificate">
+        <form asp-action="CreateCertificate">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="EmployeeId" />
             <div class="form-group">
                 <label asp-for="CertificateName" class="control-label"></label>
                 <input asp-for="CertificateName" class="form-control" />
@@ -25,14 +24,14 @@
                 <span asp-validation-for="CertificateRank" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Lưu" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Details" asp-route-id="@Model.EmployeeId">Quay lại</a>
+    <a asp-action="Index">Quay lại danh sách</a>
 </div>
 
 @section Scripts {

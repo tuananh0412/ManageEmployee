@@ -1,0 +1,106 @@
+﻿@model ManageEmployee.Models.Exp
+
+@{
+    ViewData["Title"] = "DetailsExperience";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int index = 0;
+}
+
+<h1>Chi tiết</h1>
+
+<div>
+    <h4>Thông tin nhân viên</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FullName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FullName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Gender)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Gender)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ExpInYear)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ExpInYear)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProSkill)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProSkill)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Certificates)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Certificates.Count)
+            |
+            <a asp-action="CreateCertificate" asp-route-id="@Model.EmployeeId">Thêm bằng cấp</a>
+        </dd>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Mã bằng cấp</th>
+                    <th scope="col">Tên bằng</th>
+                    <th scope="col">Xếp loại</th>
+                    <th scope="col">Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Certificates)
+                {
+                    index++;
+                    <tr>
+                        <th scope="row">@index</th>
+                        <td>@item.CertificateId</td>
+                        <td>@item.CertificateName</td>
+                        <td>@item.CertificateRank</td>
+                        <td>
+                            <p>
+                                <a asp-action="EditCertificate" asp-route-id="@item.CertificateId">Sửa</a>
+                                |
+                                <a asp-action="DeleteCertificate" asp-route-id="@item.CertificateId">Xóa</a>
+                            </p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.EmployeeId">Sửa</a> |
+    <a asp-action="Index">Quay lại danh sách</a>
+</div>
