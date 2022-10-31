@@ -1,5 +1,5 @@
-﻿@using ManageEmployee.Models.DTO
-@model IEnumerable<Employee>
+﻿@model IEnumerable<Employee>
+@using ManageEmployee.Controllers
 
 @{
     ViewData["Title"] = "Index";
@@ -9,9 +9,9 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="CreateExperience">Thêm nhân viên lâu năm</a> |
-    <a asp-action="CreateFresher">Thêm nhân viên mới ra trường</a> |
-    <a asp-action="CreateIntern">Thêm thực tập sinh</a>
+    <a asp-action="Create" asp-route-enumEmployeesType="@EnumEmployeesType.Experience">Thêm nhân viên lâu năm</a> |
+    <a asp-action="Create" asp-route-enumEmployeesType="@EnumEmployeesType.Fresher">Thêm nhân viên mới ra trường</a> |
+    <a asp-action="Create" asp-route-enumEmployeesType="@EnumEmployeesType.Intern">Thêm thực tập sinh</a>
 </p>
 
 <form asp-controller="Employees" asp-action="Index">

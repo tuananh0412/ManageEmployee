@@ -7,9 +7,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ManageEmployee.Models;
 using ManageEmployee.Models.DTO;
+using Newtonsoft.Json;
 
 namespace ManageEmployee.Controllers
 {
+    public enum EnumEmployeesType
+    {
+        Experience,
+        Fresher,
+        Intern
+    }
+
     public class EmployeesController : Controller
     {
         private readonly QuanLyNhanVienContext _context;
@@ -59,7 +67,7 @@ namespace ManageEmployee.Controllers
             {
                 if (experience != null)
                 {
-                    Exp exp = new Exp(
+                    EmployeeDTO employeeDTO = new EmployeeDTO(
                         employee.FullName,
                         employee.DateOfBirth,
                         employee.Gender,
@@ -68,15 +76,15 @@ namespace ManageEmployee.Controllers
                         employee.Email,
                         experience.ExpInYear,
                         experience.ProSkill);
-                    exp.EmployeeId = employee.EmployeeId;
-                    exp.Certificates = employee.Certificates;
+                    employeeDTO.EmployeeId = employee.EmployeeId;
+                    employeeDTO.Certificates = employee.Certificates;
 
                     string viewDetailsExperience = "~/Views/Employees/Experiences/DetailsExperience.cshtml";
-                    return View(viewDetailsExperience, exp);
+                    return View(viewDetailsExperience, employeeDTO);
                 }
                 else if (fresher != null)
                 {
-                    Frs frs = new Frs(
+                    EmployeeDTO employeeDTO = new EmployeeDTO(
                         employee.FullName,
                         employee.DateOfBirth,
                         employee.Gender,
@@ -86,15 +94,15 @@ namespace ManageEmployee.Controllers
                         fresher.GraduationDate,
                         fresher.GraduationRank,
                         fresher.Education);
-                    frs.EmployeeId = employee.EmployeeId;
-                    frs.Certificates = employee.Certificates;
+                    employeeDTO.EmployeeId = employee.EmployeeId;
+                    employeeDTO.Certificates = employee.Certificates;
 
                     string viewDetailsFresher = "~/Views/Employees/Freshers/DetailsFresher.cshtml";
-                    return View(viewDetailsFresher, frs);
+                    return View(viewDetailsFresher, employeeDTO);
                 }
                 else if (intern != null)
                 {
-                    Itn itn = new Itn(
+                    EmployeeDTO employeeDTO = new EmployeeDTO(
                         employee.FullName,
                         employee.DateOfBirth,
                         employee.Gender,
@@ -104,146 +112,142 @@ namespace ManageEmployee.Controllers
                         intern.Majors,
                         intern.Semester,
                         intern.UniversityName);
-                    itn.EmployeeId = employee.EmployeeId;
-                    itn.Certificates = employee.Certificates;
+                    employeeDTO.EmployeeId = employee.EmployeeId;
+                    employeeDTO.Certificates = employee.Certificates;
 
                     string viewDetailsIntern = "~/Views/Employees/Interns/DetailsIntern.cshtml";
-                    return View(viewDetailsIntern, itn);
+                    return View(viewDetailsIntern, employeeDTO);
                 }
             }
             return NotFound();
         }
 
-        // GET: Employees/CreateExperience
-        public IActionResult CreateExperience()
+        public IActionResult Create(EnumEmployeesType enumEmployeesType)
         {
-            return View("~/Views/Employees/Experiences/CreateExperience.cshtml");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateExperience(Exp exp)
-        {
-            if (ModelState.IsValid)
+            switch (enumEmployeesType)
             {
-                Employee employee = new Employee(
-                    exp.FullName,
-                    exp.DateOfBirth,
-                    exp.Gender,
-                    exp.Address,
-                    exp.PhoneNumber,
-                    exp.Email);
+                case EnumEmployeesType.Experience:
+                    string viewCreateExperience = "~/Views/Employees/Experiences/CreateExperience.cshtml";
+                    return View(viewCreateExperience);
 
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
+                case EnumEmployeesType.Fresher:
+                    string viewCreateFresher = "~/Views/Employees/Freshers/CreateFresher.cshtml";
+                    return View(viewCreateFresher);
 
-                Experience experience = new Experience(
-                    employee.EmployeeId,
-                    exp.ExpInYear,
-                    exp.ProSkill);
-                _context.Add(experience);
-
-                if (exp.CertificateName != null || exp.CertificateRank != null)
-                {
-                    Certificate certificate = new Certificate(
-                        exp.CertificateName,
-                        exp.CertificateRank,
-                        employee.EmployeeId);
-                    _context.Add(certificate);
-                }
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                case EnumEmployeesType.Intern:
+                    string viewCreateIntern = "~/Views/Employees/Interns/CreateIntern.cshtml";
+                    return View(viewCreateIntern);
             }
             return NotFound();
         }
 
-        // GET: Employees/CreateFresher
-        public IActionResult CreateFresher()
-        {
-            return View("~/Views/Employees/Fresher/CreateFresher.cshtml");
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateFresher(Frs frs)
+        public async Task<IActionResult> Create(EnumEmployeesType enumEmployeesType, EmployeeDTO employeeDTO)
         {
-            if (ModelState.IsValid)
+            switch (enumEmployeesType)
             {
-                Employee employee = new Employee(
-                    frs.FullName,
-                    frs.DateOfBirth,
-                    frs.Gender,
-                    frs.Address,
-                    frs.PhoneNumber,
-                    frs.Email);
+                case EnumEmployeesType.Experience:
+                    if (ModelState.IsValid)
+                    {
+                        Employee employee = new Employee(
+                            employeeDTO.FullName,
+                            employeeDTO.DateOfBirth,
+                            employeeDTO.Gender,
+                            employeeDTO.Address,
+                            employeeDTO.PhoneNumber,
+                            employeeDTO.Email);
 
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
+                        _context.Add(employee);
+                        await _context.SaveChangesAsync();
 
-                Fresher fresher = new Fresher(
-                    employee.EmployeeId,
-                    frs.GraduationDate,
-                    frs.GraduationRank,
-                    frs.Education);
-                _context.Add(fresher);
+                        Experience experience = new Experience(
+                            employee.EmployeeId,
+                            employeeDTO.ExpInYear,
+                            employeeDTO.ProSkill);
+                        _context.Add(experience);
 
-                if (frs.CertificateName != null || frs.CertificateRank != null)
-                {
-                    Certificate certificate = new Certificate(
-                        frs.CertificateName,
-                        frs.CertificateRank,
-                        employee.EmployeeId);
-                    _context.Add(certificate);
-                }
+                        if (employeeDTO.CertificateName != null || employeeDTO.CertificateRank != null)
+                        {
+                            Certificate certificate = new Certificate(
+                                employeeDTO.CertificateName,
+                                employeeDTO.CertificateRank,
+                                employee.EmployeeId);
+                            _context.Add(certificate);
+                        }
 
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return NotFound();
-        }
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    break;
+                case EnumEmployeesType.Fresher:
+                    if (ModelState.IsValid)
+                    {
+                        Employee employee = new Employee(
+                            employeeDTO.FullName,
+                            employeeDTO.DateOfBirth,
+                            employeeDTO.Gender,
+                            employeeDTO.Address,
+                            employeeDTO.PhoneNumber,
+                            employeeDTO.Email);
 
-        // GET: Employees/CreateIntern
-        public IActionResult CreateIntern()
-        {
-            return View("~/Views/Employees/Intern/CreateIntern.cshtml");
-        }
+                        _context.Add(employee);
+                        await _context.SaveChangesAsync();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateIntern(Itn itn)
-        {
-            if (ModelState.IsValid)
-            {
-                Employee employee = new Employee(
-                    itn.FullName,
-                    itn.DateOfBirth,
-                    itn.Gender,
-                    itn.Address,
-                    itn.PhoneNumber,
-                    itn.Email);
+                        Fresher fresher = new Fresher(
+                            employee.EmployeeId,
+                            employeeDTO.GraduationDate,
+                            employeeDTO.GraduationRank,
+                            employeeDTO.Education);
+                        _context.Add(fresher);
 
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
+                        if (employeeDTO.CertificateName != null || employeeDTO.CertificateRank != null)
+                        {
+                            Certificate certificate = new Certificate(
+                                employeeDTO.CertificateName,
+                                employeeDTO.CertificateRank,
+                                employee.EmployeeId);
+                            _context.Add(certificate);
+                        }
 
-                Intern intern = new Intern(
-                    employee.EmployeeId,
-                    itn.Majors,
-                    itn.Semester,
-                    itn.UniversityName);
-                _context.Add(intern);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    break;
+                case EnumEmployeesType.Intern:
+                    if (ModelState.IsValid)
+                    {
+                        Employee employee = new Employee(
+                            employeeDTO.FullName,
+                            employeeDTO.DateOfBirth,
+                            employeeDTO.Gender,
+                            employeeDTO.Address,
+                            employeeDTO.PhoneNumber,
+                            employeeDTO.Email);
 
-                if (itn.CertificateName != null || itn.CertificateRank != null)
-                {
-                    Certificate certificate = new Certificate(
-                        itn.CertificateName,
-                        itn.CertificateRank,
-                        employee.EmployeeId);
-                    _context.Add(certificate);
-                }
+                        _context.Add(employee);
+                        await _context.SaveChangesAsync();
 
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                        Intern intern = new Intern(
+                            employee.EmployeeId,
+                            employeeDTO.Majors,
+                            employeeDTO.Semester,
+                            employeeDTO.UniversityName);
+                        _context.Add(intern);
+
+                        if (employeeDTO.CertificateName != null || employeeDTO.CertificateRank != null)
+                        {
+                            Certificate certificate = new Certificate(
+                                employeeDTO.CertificateName,
+                                employeeDTO.CertificateRank,
+                                employee.EmployeeId);
+                            _context.Add(certificate);
+                        }
+
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    break;
             }
             return NotFound();
         }
@@ -265,7 +269,7 @@ namespace ManageEmployee.Controllers
             {
                 if (experience != null)
                 {
-                    Exp exp = new Exp(
+                    EmployeeDTO employeeDTO = new EmployeeDTO(
                         employee.FullName,
                         employee.DateOfBirth,
                         employee.Gender,
@@ -276,11 +280,11 @@ namespace ManageEmployee.Controllers
                         experience.ProSkill);
 
                     string viewEditExperience = "~/Views/Employees/Experiences/EditExperience.cshtml";
-                    return View(viewEditExperience, exp);
+                    return View(viewEditExperience, employeeDTO);
                 }
                 else if (fresher != null)
                 {
-                    Frs frs = new Frs(
+                    EmployeeDTO employeeDTO = new EmployeeDTO(
                         employee.FullName,
                         employee.DateOfBirth,
                         employee.Gender,
@@ -292,11 +296,11 @@ namespace ManageEmployee.Controllers
                         fresher.Education);
 
                     string viewEditFresher = "~/Views/Employees/Freshers/EditFresher.cshtml";
-                    return View(viewEditFresher, frs);
+                    return View(viewEditFresher, employeeDTO);
                 }
                 else if (intern != null)
                 {
-                    Itn itn = new Itn(
+                    EmployeeDTO employeeDTO = new EmployeeDTO(
                         employee.FullName,
                         employee.DateOfBirth,
                         employee.Gender,
@@ -308,7 +312,7 @@ namespace ManageEmployee.Controllers
                         intern.UniversityName);
 
                     string viewEditIntern = "~/Views/Employees/Interns/EditIntern.cshtml";
-                    return View(viewEditIntern, itn);
+                    return View(viewEditIntern, employeeDTO);
                 }
             }
             return NotFound();
@@ -316,7 +320,7 @@ namespace ManageEmployee.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Exp exp, Frs frs, Itn itn)
+        public async Task<IActionResult> Edit(int id, EmployeeDTO employeeDTO)
         {
             if (ModelState.IsValid)
             {
@@ -325,21 +329,21 @@ namespace ManageEmployee.Controllers
                 var fresher = await _context.Freshers.FindAsync(id);
                 var intern = await _context.Interns.FindAsync(id);
 
-                if (exp != null)
+                if (employeeDTO != null)
                 {
                     if (employee != null)
                     {
-                        employee.FullName = exp.FullName;
-                        employee.DateOfBirth = exp.DateOfBirth;
-                        employee.Gender = exp.Gender;
-                        employee.Address = exp.Address;
-                        employee.PhoneNumber = exp.PhoneNumber;
-                        employee.Email = exp.Email;
+                        employee.FullName = employeeDTO.FullName;
+                        employee.DateOfBirth = employeeDTO.DateOfBirth;
+                        employee.Gender = employeeDTO.Gender;
+                        employee.Address = employeeDTO.Address;
+                        employee.PhoneNumber = employeeDTO.PhoneNumber;
+                        employee.Email = employeeDTO.Email;
                         _context.Update(employee);
                         if (experience != null)
                         {
-                            experience.ExpInYear = exp.ExpInYear;
-                            experience.ProSkill = exp.ProSkill;
+                            experience.ExpInYear = employeeDTO.ExpInYear;
+                            experience.ProSkill = employeeDTO.ProSkill;
 
                             _context.Update(experience); 
                             await _context.SaveChangesAsync();
@@ -347,9 +351,9 @@ namespace ManageEmployee.Controllers
                         }
                         else if (fresher != null)
                         {
-                            fresher.GraduationDate = frs.GraduationDate;
-                            fresher.GraduationRank = frs.GraduationRank;
-                            fresher.Education = frs.Education;
+                            fresher.GraduationDate = employeeDTO.GraduationDate;
+                            fresher.GraduationRank = employeeDTO.GraduationRank;
+                            fresher.Education = employeeDTO.Education;
 
                             _context.Update(fresher);
                             await _context.SaveChangesAsync();
@@ -357,9 +361,9 @@ namespace ManageEmployee.Controllers
                         }
                         else if (intern != null)
                         {
-                            intern.Majors = itn.Majors;
-                            intern.Semester = itn.Semester;
-                            intern.UniversityName = itn.UniversityName;
+                            intern.Majors = employeeDTO.Majors;
+                            intern.Semester = employeeDTO.Semester;
+                            intern.UniversityName = employeeDTO.UniversityName;
 
                             _context.Update(intern);
                             await _context.SaveChangesAsync();
@@ -391,7 +395,7 @@ namespace ManageEmployee.Controllers
             {
                 if (experience != null)
                 {
-                    Exp exp = new Exp(
+                    EmployeeDTO employeeDTO = new EmployeeDTO(
                         employee.FullName,
                         employee.DateOfBirth,
                         employee.Gender,
@@ -400,15 +404,15 @@ namespace ManageEmployee.Controllers
                         employee.Email,
                         experience.ExpInYear,
                         experience.ProSkill);
-                    exp.EmployeeId = employee.EmployeeId;
-                    exp.Certificates = employee.Certificates;
+                    employeeDTO.EmployeeId = employee.EmployeeId;
+                    employeeDTO.Certificates = employee.Certificates;
 
                     string viewDeleteExperience = "~/Views/Employees/Experiences/DeleteExperience.cshtml";
-                    return View(viewDeleteExperience, exp);
+                    return View(viewDeleteExperience, employeeDTO);
                 }
                 else if (fresher != null)
                 {
-                    Frs frs = new Frs(
+                    EmployeeDTO employeeDTO = new EmployeeDTO(
                         employee.FullName,
                         employee.DateOfBirth,
                         employee.Gender,
@@ -418,15 +422,15 @@ namespace ManageEmployee.Controllers
                         fresher.GraduationDate,
                         fresher.GraduationRank,
                         fresher.Education);
-                    frs.EmployeeId = employee.EmployeeId;
-                    frs.Certificates = employee.Certificates;
+                    employeeDTO.EmployeeId = employee.EmployeeId;
+                    employeeDTO.Certificates = employee.Certificates;
 
                     string viewDeleteFresher = "~/Views/Employees/Freshers/DeleteFresher.cshtml";
-                    return View(viewDeleteFresher, frs);
+                    return View(viewDeleteFresher, employeeDTO);
                 }
                 else if (intern != null)
                 {
-                    Itn itn = new Itn(
+                    EmployeeDTO employeeDTO = new EmployeeDTO(
                         employee.FullName,
                         employee.DateOfBirth,
                         employee.Gender,
@@ -436,11 +440,11 @@ namespace ManageEmployee.Controllers
                         intern.Majors,
                         intern.Semester,
                         intern.UniversityName);
-                    itn.EmployeeId = employee.EmployeeId;
-                    itn.Certificates = employee.Certificates;
+                    employeeDTO.EmployeeId = employee.EmployeeId;
+                    employeeDTO.Certificates = employee.Certificates;
 
                     string viewDeleteIntern = "~/Views/Employees/Interns/DeleteIntern.cshtml";
-                    return View(viewDeleteIntern, itn);
+                    return View(viewDeleteIntern, employeeDTO);
                 }
             }
 
@@ -490,7 +494,7 @@ namespace ManageEmployee.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCertificate(int id, Ctfc ctfc)
+        public async Task<IActionResult> CreateCertificate(int id, CertificateDTO ctfc)
         {
             if (ModelState.IsValid)
             {
@@ -503,7 +507,7 @@ namespace ManageEmployee.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Employees", new { id = id });
             }
-            return View();
+            return NotFound();
         }
 
         // GET: Employees/EditEditCertificate/5
@@ -522,7 +526,7 @@ namespace ManageEmployee.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditCertificate(int id, Ctfc ctfc)
+        public async Task<IActionResult> EditCertificate(int id, CertificateDTO ctfc)
         {
             var certificate = _context.Certificates.Find(id);
 

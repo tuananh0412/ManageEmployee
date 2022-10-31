@@ -1,4 +1,4 @@
-﻿@model ManageEmployee.Models.Exp
+﻿@model ManageEmployee.Models.DTO.EmployeeDTO
 
 @{
     ViewData["Title"] = "DetailsExperience";
@@ -68,37 +68,37 @@
             |
             <a asp-action="CreateCertificate" asp-route-id="@Model.EmployeeId">Thêm bằng cấp</a>
         </dd>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Mã bằng cấp</th>
-                    <th scope="col">Tên bằng</th>
-                    <th scope="col">Xếp loại</th>
-                    <th scope="col">Chức năng</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Certificates)
-                {
-                    index++;
-                    <tr>
-                        <th scope="row">@index</th>
-                        <td>@item.CertificateId</td>
-                        <td>@item.CertificateName</td>
-                        <td>@item.CertificateRank</td>
-                        <td>
-                            <p>
-                                <a asp-action="EditCertificate" asp-route-id="@item.CertificateId">Sửa</a>
-                                |
-                                <a asp-action="DeleteCertificate" asp-route-id="@item.CertificateId">Xóa</a>
-                            </p>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
     </dl>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã bằng cấp</th>
+                <th scope="col">Tên bằng</th>
+                <th scope="col">Xếp loại</th>
+                <th scope="col">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Certificates)
+            {
+                index++;
+                <tr>
+                    <th scope="row">@index</th>
+                    <td>@item.CertificateId</td>
+                    <td>@item.CertificateName</td>
+                    <td>@item.CertificateRank</td>
+                    <td>
+                        <p>
+                            <a asp-action="EditCertificate" asp-route-id="@item.CertificateId">Sửa</a>
+                            |
+                            <a asp-action="DeleteCertificate" asp-route-id="@item.CertificateId">Xóa</a>
+                        </p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.EmployeeId">Sửa</a> |

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace ManageEmployee.Models
+namespace ManageEmployee.Models.DTO
 {
-    public class Ctfc
+    public class CertificateDTO
     {
         [Display(Name = "Tên bằng")]
         public string? CertificateName { get; set; }

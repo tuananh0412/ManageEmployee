@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ManageEmployee.Models.DTO
+namespace ManageEmployee.Models
 {
     public partial class Experience
     {

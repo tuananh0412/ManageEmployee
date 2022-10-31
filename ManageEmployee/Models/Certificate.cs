@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace ManageEmployee.Models.DTO
+namespace ManageEmployee.Models
 {
     public partial class Certificate
     {

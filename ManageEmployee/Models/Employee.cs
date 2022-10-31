@@ -1,15 +1,18 @@
-﻿using ManageEmployee.Models.DTO;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
 namespace ManageEmployee.Models
 {
-    public class Empl
+    public partial class Employee
     {
-        public Empl()
-        { }
+        public Employee()
+        {
+            Certificates = new HashSet<Certificate>();
+        }
 
-        public Empl(string fullName, DateTime? dateOfBirth, string? gender, string? address, string? phoneNumber, string? email)
+        public Employee(string fullName, DateTime? dateOfBirth, string? gender, string? address, string? phoneNumber, string? email)
         {
             FullName = fullName;
             DateOfBirth = dateOfBirth;
@@ -47,13 +50,11 @@ namespace ManageEmployee.Models
         [Display(Name = "Địa chỉ email")]
         public string? Email { get; set; }
 
-        [Display(Name = "Tên bằng")]
-        public string? CertificateName { get; set; }
+        public virtual Experience? Experience { get; set; }
+        public virtual Fresher? Fresher { get; set; }
+        public virtual Intern? Intern { get; set; }
 
-        [Display(Name = "Xếp loại bằng")]
-        public string? CertificateRank { get; set; }
-
-        [Display(Name = "Số bằng cấp")]
-        public ICollection<Certificate>? Certificates { get; set; }
+        [Display(Name = "Bằng cấp")]
+        public virtual ICollection<Certificate>? Certificates { get; set; }
     }
 }

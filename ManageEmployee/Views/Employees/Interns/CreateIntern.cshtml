@@ -1,4 +1,5 @@
-﻿@model ManageEmployee.Models.Itn
+﻿@model ManageEmployee.Models.DTO.EmployeeDTO
+@using ManageEmployee.Controllers;
 
 @{
     ViewData["Title"] = "CreateIntern";
@@ -11,7 +12,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateIntern">
+        <form asp-action="Create" asp-route-enumEmployeesType="@EnumEmployeesType.Intern">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FullName" class="control-label"></label>
@@ -58,16 +59,19 @@
                 <input asp-for="UniversityName" class="form-control" />
                 <span asp-validation-for="UniversityName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CertificateName" class="control-label"></label>
-                <input asp-for="CertificateName" class="form-control" />
-                <span asp-validation-for="CertificateName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CertificateRank" class="control-label"></label>
-                <input asp-for="CertificateRank" class="form-control" />
-                <span asp-validation-for="CertificateRank" class="text-danger"></span>
-            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tên bằng</th>
+                        <th scope="col">Xếp loại</th>
+                        <th scope="col">
+                            <a asp-action="CreateCertificate">Thêm bằng cấp</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
